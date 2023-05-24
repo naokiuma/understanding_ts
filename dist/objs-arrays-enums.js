@@ -1,4 +1,3 @@
-"use strict";
 // const person:{name:string,age:number,hobbies:string[],role:[number,string]} = {
 //     name:'yota',
 //     age:30,

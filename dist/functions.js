@@ -1,4 +1,3 @@
-"use strict";
 function printResult(num) {
     console.log('result：' + num);
 }

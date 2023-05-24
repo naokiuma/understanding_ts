@@ -1,4 +1,3 @@
-"use strict";
 console.log('ここにコードを追加');
 function add_basic(n1, n2) {
     if (typeof n1 !== 'number') {
