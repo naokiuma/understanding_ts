@@ -17,15 +17,24 @@ const e1:ElevateEmploee = {
 }
 
 
-//型ガードその1
+
 type Cominable = string | number;
+// 関数オーバーロード。同じ関数名で設定できる。こうすることで、それぞれの返り値を指定できる！
+function Combinable(a:number,b:number):number;
+function Combinable(a:string,b:string):string;
+
+
 function Combinable (a:Cominable,b:Cominable){
+	//型ガードその1
 	if(typeof a === 'string' || typeof b === 'string'){
 		return a.toString() + b.toString();
 	}
 	return a + b;
 }
-// その他、Classでけ使える、instanceofも型ガードに利用可能。84より
+// その他、Classでだけ使える、instanceofも型ガードに利用可能。84より
+
+const result = Combinable('hellow','ts');
+const result2 = Combinable(1,3)
 
 
 //型ガードその2
@@ -96,6 +105,25 @@ moveAnimal({type:'bird',flyingSpeed:200})
 // なお。reactではjsxと衝突するので、こう書く。
 const userInputElement = document.getElementById('totototo')! as HTMLInputElement;
 userInputElement.value = 'こんにちは';
+
+
+// インデックス型
+// interfaceで、どんなプロパティが入るかわからない場合に使える！
+
+/**
+ * {email:'正しいメールアドレスではありません',usename:'メールアドレスの形式ではありません}
+ * のように、いろんなformの値を受け取りたい。でも、特定の名前に依存したくない場合に使う。
+ */
+interface ErrorContainer{
+	//プロパティ名はstring、その値もstringということ
+	[prop:string]:string
+}
+
+// こんな感じで、複数のプロパティを指定できる。なんと指定しないということもできる。
+const erroBag:ErrorContainer = {
+	email:'正しいメールアドレスではありません。',
+	usename:'メールアドレスの形式ではありません'
+}
 
 
 

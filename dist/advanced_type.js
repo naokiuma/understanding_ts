@@ -4,11 +4,15 @@ const e1 = {
     startDate: new Date()
 };
 function Combinable(a, b) {
+    //型ガードその1
     if (typeof a === 'string' || typeof b === 'string') {
         return a.toString() + b.toString();
     }
     return a + b;
 }
+// その他、Classでだけ使える、instanceofも型ガードに利用可能。84より
+const result = Combinable('hellow', 'ts');
+const result2 = Combinable(1, 3);
 function printEmployeeInmterface(emp) {
     console.log(emp.name); //nameは両方に存在するので、問題なし。
     //このconsole.logは実行できない。ifで囲って判定しようとしても、typeofはjsの関数であり、「Admin」はts上で定義した型なので、エラーになる。
@@ -49,4 +53,9 @@ moveAnimal({ type: 'bird', flyingSpeed: 200 });
 // なお。reactではjsxと衝突するので、こう書く。
 const userInputElement = document.getElementById('totototo');
 userInputElement.value = 'こんにちは';
+// こんな感じで、複数のプロパティを指定できる。なんと指定しないということもできる。
+const erroBag = {
+    email: '正しいメールアドレスではありません。',
+    usename: 'メールアドレスの形式ではありません'
+};
 //# sourceMappingURL=advanced_type.js.map
