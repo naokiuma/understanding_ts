@@ -50,7 +50,7 @@ moveAnimal({ type: 'bird', flyingSpeed: 200 });
 // これでok。
 // const userInputElement = <HTMLInputElement>document.getElementById('totototo')!;
 // userInputElement.value = 'こんにちは';
-// なお。reactではjsxと衝突するので、こう書く。
+// なお。reactではjsxと衝突するので、こう書く。-----------qiitaに追記してもいいかも。
 const userInputElement = document.getElementById('totototo');
 userInputElement.value = 'こんにちは';
 // こんな感じで、複数のプロパティを指定できる。なんと指定しないということもできる。

@@ -101,13 +101,13 @@ moveAnimal({type:'bird',flyingSpeed:200})
 // const userInputElement = <HTMLInputElement>document.getElementById('totototo')!;
 // userInputElement.value = 'こんにちは';
 
-
-// なお。reactではjsxと衝突するので、こう書く。
+// なお。reactではjsxと衝突するので、こう書く。-----------qiitaに追記してもいいかも。
 const userInputElement = document.getElementById('totototo')! as HTMLInputElement;
 userInputElement.value = 'こんにちは';
 
 
-// インデックス型
+
+// インデックス型--------------
 // interfaceで、どんなプロパティが入るかわからない場合に使える！
 
 /**
