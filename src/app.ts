@@ -59,7 +59,17 @@ console.log(countAndDescribe('こんにちは！'))
 // 	return 'value：' + obj[key];
 // }
 
-// こうする!Tは、Uのプロパティの一つであるという型
+// こうする!Uは、Tのプロパティの一つであるという型
 function extractAndConvert<T extends object,U extends keyof T>(obj:T,key:U){
 	return 'value：' + obj[key];
 }
+
+
+// ジェネリックのreadonlyとは。こういう書き方で、読み取り専用にできる。
+const names:Readonly<string[]> = ['max','annna'];
+// names.push('kevin');・・ここでtsがエラーを出している
+
+
+//関数の引数におけるジェネリック VS ユニオン型
+// ジェネリックは、型を一度決めたらその利用箇所の中では同じものを使いたい場合におすすめ。
+// ユニオン型は、例えばnumberとstringと。。。と、複数の引数を受け取りたい場合。
