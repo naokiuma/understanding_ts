@@ -1,45 +1,67 @@
-function merge(objA, objB) {
-    return Object.assign(objA, objB);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+//デコレーターを返すデコレータファクトリー
+function Logger(logString) {
+    console.log('ロガーデコレーターファクトリー実行1');
+    return function (constructor) {
+        console.log('ログ出力中4・・・');
+        console.log(constructor);
+        console.log(logString);
+    };
 }
-console.log(merge({ name: 'max' }, { age: 20 }));
-//これだと、ageにアクセスできないエラー。プロパティ 'age' は型 'object' に存在しません。
-// const medgedObject1 = merge({name:'max'},{age:20});
-// console.log(medgedObject1.age)
-// もちろんこういうふうに型キャストをしても良い。が、面倒。
-// const medgedObject = merge({name:'max'},{age:20}) as {name:string,age:number};
-// 。。。で、
-// こういう時に便利なのが、ジェネリック型。
-// なぜ、前者のmerge1の場合はエラーになったのか？それはobjectと定義していたから。
-//これにより、関数を定義した時に決まるのではなく、関数を呼ぶときに、「動的に」決めることができる！これがジェネリック型のパワ＾
-function merge2(objA, objB) {
-    return Object.assign(objA, objB);
+//このように、作ったデコレーターは、ライブラリとして世の中に出すこともできる
+function WithTemplate(template, hookId) {
+    console.log('WithTemplateデコレーターファクトリー実行2');
+    return function (constructor) {
+        console.log('ログ出力中3・・・');
+        const hookEl = document.getElementById(hookId);
+        const p = new constructor();
+        if (hookEl) {
+            hookEl.innerHTML = template;
+            // hookEl.querySelector('h1')!.textContent = p.name
+        }
+    };
 }
-const medgedObject2 = merge2({ name: 'max' }, { age: 20 });
-console.log(medgedObject2.age);
-//こういう風にもかけるけど、medgedObject2のように、引数を入れた時に型推論してくれているので、わざわざ定義しなくても良い。
-const mergedObject3 = merge2('name', 2);
-console.log(mergedObject3);
-//ジェネリックの制約。このようにextendsをつけると、最低限objectじゃ無いといけないよ！という制約をつけることができる。
-// もちろんnumberでも、unionでもできる！
-function merge3(objA, objB) {
-    return Object.assign(objA, objB);
-}
-//上のLengthyがないと、tsはこの引数がlengthを持っているかわからないので、エラーになる
-function countAndDescribe(element) {
-    let descriptionText = '値がありません。';
-    if (element.length > 0) {
-        descriptionText = '値は' + element.length + '個です';
+let Person = class Person {
+    constructor() {
+        this.name = 'max';
+        console.log('personオブジェクトを作成中5・・・');
     }
-    return [element, descriptionText];
+};
+Person = __decorate([
+    Logger('logstring'),
+    WithTemplate('<hi>hellow</hi>', 'app')
+], Person);
+const pers = new Person();
+//さまざまな場所にデコレーター
+function Log(target, propertyName) {
+    console.log(target);
+    console.log(propertyName);
 }
-console.log(countAndDescribe('こんにちは！'));
-// keyofで制約をつける。-------------
-//こういう時に、objにはkeyのプロパティがあることを保証したい！
-// function extractAndConvert(obj,key){
-// 	return 'value：' + obj[key];
-// }
-// こうする!Tは、Uのプロパティの一つであるという型
-function extractAndConvert(obj, key) {
-    return 'value：' + obj[key];
+// ロガーを配置できる箇所
+//配置箇所によって、使用できる引数が違う
+class Product {
+    constructor(t, p) {
+        this.title = t;
+        this._price = p;
+    }
+    getPriceWithTax(tax) {
+        return this._price * (1 + tax);
+    }
+    set price(val) {
+        if (val > 0) {
+            this._price = val;
+        }
+        else {
+            throw new Error("不正な値です。");
+        }
+    }
 }
+__decorate([
+    log
+], Product.prototype, "title", void 0);
 //# sourceMappingURL=app.js.map
