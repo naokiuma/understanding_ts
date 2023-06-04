@@ -166,8 +166,8 @@ console.log(button)
 
 button?.addEventListener('click',
 	p.showMessage //これだと、classでのthisがbuttonそのものになるので、bindしておく必要があル。
-	// こういうふうに。
-	// p.showMessage.bind(p) //わざわざこういうふうにbindしないといけない
+	// こういうふうに。わざわざbindしないといけない
+	// p.showMessage.bind(p) 
 )
 
 

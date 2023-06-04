@@ -148,8 +148,8 @@ const p = new Printer();
 const button = document.getElementsByClassName('btn_area')[0];
 console.log(button);
 button === null || button === void 0 ? void 0 : button.addEventListener('click', p.showMessage //これだと、classでのthisがbuttonそのものになるので、bindしておく必要があル。
-// こういうふうに。
-// p.showMessage.bind(p) //わざわざこういうふうにbindしないといけない
+// こういうふうに。わざわざbindしないといけない
+// p.showMessage.bind(p) 
 );
 const registeredValidators = {};
 //デコレータ関数1。プロパティ向け
