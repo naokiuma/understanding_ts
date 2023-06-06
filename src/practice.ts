@@ -76,25 +76,25 @@ const sum: number = sumOfPos([1, 3, -2, 0]);
 
 
 //--------2_1
-
-// function myFilter<T>(arr:T[], predicate:(elm:T) => boolean):T[] {
 function myFilter<T>(arr: T[], predicate: (elm: T) => boolean): T[] {
+// function myFilter<T>(arr:T[], predicate:(elm:T) => boolean):T[] {
 	const result = [];
 	for (const elm of arr) {
-	  if (predicate(elm)) {
-		result.push(elm);
-	  }
+		if (predicate(elm)) {
+			// result.push(elm);
+		}
 	}
 	return result;
 }
-  
-  // 使用例
-  const res = myFilter([1, 2, 3, 4, 5], num => num % 2 === 0);
-  const res2 = myFilter(['foo', 'hoge', 'bar'], str => str.length >= 4);
-  
-// エラー例
-//   myFilter([1, 2, 3, 4, 5], str => str.length >= 4);
 
+
+  
+// 使用例
+const res = myFilter([1, 2, 3, 4, 5], num => num % 2 === 0);
+const res2 = myFilter(['foo', 'hoge', 'bar'], str => str.length >= 4);
+
+// エラー例
+// myFilter([1, 2, 3, 4, 5], str => str.length >= 4);
 
 
 //--------2_2
@@ -224,7 +224,9 @@ setAnotherState(100);
 // 	key:string
 // }
 ///課題、返り値を見てみてよ
-function mapFromArray<T,K extends keyof T>(arr:T[],key:K) {
+// function mapFromArray<T,K extends keyof T>(arr:T[],key:K) {
+
+function mapFromArray(arr, key) {
 	const result = new Map();
 	for (const obj of arr) {
 	  result.set(obj[key], obj);
@@ -251,3 +253,89 @@ Map {
   
 // エラー例
 // mapFromArray(data2, "age");
+
+
+
+//--------3_2
+
+// PartialはTypeScriptの標準ライブラリに定義されている型で、
+// オブジェクトの型を渡されると、その各プロパティを全部省略可能にするものです。
+// MyPartialという名前でこれを実装してください。
+
+// 使用例
+/*
+ * T1は { foo?: number; bar?: string; } となる
+ */
+
+//これ　が回答。mapped type。
+// type MyPartial<T> = { [K in keyof T]: T[K] };
+
+// type T1 = MyPartial<{
+// 	foo?: number;
+// 	bar?: string;
+// }>;
+// /*
+// * T2は { hoge?: { piyo: number; } } となる
+// */
+// type T2 = MyPartial<{
+// 	hoge: {
+// 		piyo: number;
+// 	};
+// }>;
+
+
+
+//--------3_2
+// 一瞬理解できた！！！
+
+// 問題文がややこしい割に、やることは単純です。
+// 今回のように、引数に渡された文字列に応じて型の挙動を変えたい場合はその文字列をリテラル型として取得するのが定番です。
+// これは3-1でもやりましたね。今回は型引数Evを第1引数の型としました。
+// 例えばed.emit("start", { ... })の場合、Evには"start"型が入ります。さらに、Ev extends keyof Eとすることによって、Eに定義されていないイベント名を拒否しています。ed.emit("foobar", { ... })のような呼び出しはこれによって型エラーとなります。
+
+// イベント名が型Evとして得られているので、第2引数の型はEから適切なものを取得します。
+// Eがイベント名: データの型という形のオブジェクトなので、目的の型はE[Ev]で得られます。
+
+interface EventPayloads {
+	start: {
+	  user: string;
+	};
+	stop: {
+	  user: string;
+	  after: number;
+	};
+	end: {};
+}
+  
+class EventDischarger<E> {
+	//下の方に回答！
+	
+	emit(eventName, payload) {
+		// 省略
+	}
+}
+
+// 使用例
+const ed = new EventDischarger<EventPayloads>();
+ed.emit("start", {
+	user: "user1"
+});
+ed.emit("stop", {
+	user: "user1",
+	after: 3
+});
+ed.emit("end", {});
+//  emit<Ev extends keyof E>(eventName: Ev, payload: E[Ev]) {
+
+  // エラー例
+  ed.emit("start", {
+	user: "user2",
+	after: 0
+  });
+  ed.emit("stop", {
+	user: "user2"
+  });
+  ed.emit("foobar", {
+	foo: 123
+  });
+  

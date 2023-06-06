@@ -31,12 +31,12 @@ const sum = sumOfPos([1, 3, -2, 0]);
 // sumOfPos(123, 456);
 // sumOfPos([123, "foobar"]);
 //--------2_1
-// function myFilter<T>(arr:T[], predicate:(elm:T) => boolean):T[] {
 function myFilter(arr, predicate) {
+    // function myFilter<T>(arr:T[], predicate:(elm:T) => boolean):T[] {
     const result = [];
     for (const elm of arr) {
         if (predicate(elm)) {
-            result.push(elm);
+            // result.push(elm);
         }
     }
     return result;
@@ -103,6 +103,7 @@ setAnotherState(100);
 // 	key:string
 // }
 ///課題、返り値を見てみてよ
+// function mapFromArray<T,K extends keyof T>(arr:T[],key:K) {
 function mapFromArray(arr, key) {
     const result = new Map();
     for (const obj of arr) {
@@ -117,15 +118,32 @@ const data2 = [
     { id: 100, name: "Taro Yamada" }
 ];
 const dataMap = mapFromArray(data2, "id");
-/*
-dataMapは
-Map {
-    1 => { id: 1, name: 'John Smith' },
-    2 => { id: 2, name: 'Mary Sue' },
-    100 => { id: 100, name: 'Taro Yamada' }
+class EventDischarger {
+    //下の方に回答！
+    emit(eventName, payload) {
+        // 省略
+    }
 }
-というMapになる
-*/
+// 使用例
+const ed = new EventDischarger();
+ed.emit("start", {
+    user: "user1"
+});
+ed.emit("stop", {
+    user: "user1",
+    after: 3
+});
+ed.emit("end", {});
+//  emit<Ev extends keyof E>(eventName: Ev, payload: E[Ev]) {
 // エラー例
-mapFromArray(data2, "age");
+ed.emit("start", {
+    user: "user2",
+    after: 0
+});
+ed.emit("stop", {
+    user: "user2"
+});
+ed.emit("foobar", {
+    foo: 123
+});
 //# sourceMappingURL=practice.js.map
