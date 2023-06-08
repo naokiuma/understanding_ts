@@ -1,3 +1,30 @@
+//validation
+interface Validatable{
+	value:string|number;
+	required?:boolean;
+	minLength?:number;
+	maxLength?:number;
+	min?:number;
+	max?:number
+
+}
+
+function validate(validatableInput:Validatable) {
+	let isValid = true;
+	if(validatableInput.required){
+		//trimeを使うため、tostringで文字にする。
+		isValid = isValid && validatableInput.value.toString().trim().length > 0;
+	}
+	if(validatableInput.minLength != null && 
+		typeof validatableInput.value === 'string'){
+		isValid = isValid && validatableInput.value.length > validatableInput.minLength
+	}
+
+	return isValid
+
+
+}
+
 
 /*デコレーター*/
 function FormAutobind(target:any,methodName,descriptor:PropertyDescriptor){
@@ -17,10 +44,42 @@ function FormAutobind(target:any,methodName,descriptor:PropertyDescriptor){
 			return bindedMethod;
 		}
 	}
-
 	return adjDescriptor;
 }
 
+
+
+class ProjectList{
+	templateElement:HTMLTemplateElement;
+	hostElement:HTMLElement;
+	element:HTMLElement;
+
+	constructor(private type:'active'| 'finished'){
+		this.templateElement = document.getElementById('project-list')! as HTMLTemplateElement;
+		this.hostElement = <HTMLElement>document.getElementById('app');
+
+		//form要素。content(指定の一つ下を)importする。第二引数はディープコピーするかどうか
+		const importedNode = document.importNode(this.templateElement.content,true);
+		this.element = importedNode.firstElementChild as HTMLElement;
+		this.element.id = `${this.type}-projects`;
+		this.attach();
+		this.renderContent();
+	}
+
+	private renderContent(){
+		const listId = `${this.type}-projects-list`;
+		this.element.querySelector('ul')!.id = listId;
+		this.element.querySelector('h2')!.textContent = this.type === 'active' ? '実行中プロジェクト' : '完了プロジェクト';
+
+
+
+	}
+
+	private attach(){
+		this.hostElement.insertAdjacentElement('beforeend',this.element)
+	}
+
+}
 
 
 
@@ -41,11 +100,10 @@ class ProjectInput{
 	mandayInputElement:HTMLInputElement;
 
 
-
 	constructor(){
 		console.log('コンストラクタ')
 		//取得したdomがTSはなんなのかわからないので、指定。asでも、最初に<xxxx...>でも良い
-		this.templateElement = document.getElementById('project-input')!　as HTMLTemplateElement;
+		this.templateElement = document.getElementById('project-input')! as HTMLTemplateElement;
 		this.hostElement = <HTMLElement>document.getElementById('app');
 
 		//form要素。content(指定の一つ下を)importする。第二引数はディープコピーするかどうか
@@ -110,9 +168,13 @@ class ProjectInput{
 		const enterdaManday = this.mandayInputElement.value;
 
 		if(
-			enterdTitle.trim().length === 0 ||
-			enterdDescription.trim().length === 0 ||
-			enterdaManday.trim().length === 0
+			validate({value:enterdTitle,required:true,minLength:5}) &&
+			validate({value:enterdDescription,required:true,minLength:5}) &&
+			validate({value:enterdaManday,required:true,minLength:5})
+
+			// enterdTitle.trim().length === 0 ||
+			// enterdDescription.trim().length === 0 ||
+			// enterdDescription.trim().length === 0
 		){
 			alert('入力値が正しくありません。再度お試しください。')
 			return ;
@@ -125,6 +187,9 @@ class ProjectInput{
 }
 
 const newploject = new ProjectInput();
+const activePrjList = new ProjectList('active');
+const finishedPrjList = new ProjectList('finished');
+
 
 
 

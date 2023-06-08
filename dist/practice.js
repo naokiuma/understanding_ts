@@ -15,35 +15,18 @@ showUserInfo({
     age: 16,
     private: false,
 });
-const isPositive3 = num => num >= 0;
+const isPositive2 = num => num >= 0;
 // 使用例
-isPositive(5);
+isPositive2(5);
 // エラー例
-// isPositive3('foo');
-// const res: number = isPositive(123);
+// isPositive2('foo');
+// const res: number = isPositive2(123);
 //--------4
 function sumOfPos(arr) {
     return arr.filter(num => num >= 0).reduce((acc, num) => acc + num, 0);
 }
 // 使用例
 const sum = sumOfPos([1, 3, -2, 0]);
-// エラー例
-// sumOfPos(123, 456);
-// sumOfPos([123, "foobar"]);
-//--------2_1
-function myFilter(arr, predicate) {
-    // function myFilter<T>(arr:T[], predicate:(elm:T) => boolean):T[] {
-    const result = [];
-    for (const elm of arr) {
-        if (predicate(elm)) {
-            // result.push(elm);
-        }
-    }
-    return result;
-}
-// 使用例
-const res = myFilter([1, 2, 3, 4, 5], num => num % 2 === 0);
-const res2 = myFilter(['foo', 'hoge', 'bar'], str => str.length >= 4);
 function getSpeed(speed) {
     switch (speed) {
         case "slow":
@@ -66,7 +49,7 @@ addEventListener("event3", () => { }, {
     capture: true,
     once: false
 });
-// // エラー例
+// エラー例
 // addEventListener("foobar", () => {}, "string");
 // addEventListener("hoge", () => {}, {
 //   capture: true,
@@ -75,7 +58,6 @@ addEventListener("event3", () => { }, {
 // });
 //--------2_4
 function giveId(obj) {
-    // function giveId(T):{id:string,obj:{T extends obj}} {
     const id = "本当はランダムがいいけどここではただの文字列";
     return Object.assign(Object.assign({}, obj), { id });
 }
@@ -119,31 +101,58 @@ const data2 = [
 ];
 const dataMap = mapFromArray(data2, "id");
 class EventDischarger {
-    //下の方に回答！
     emit(eventName, payload) {
+        // emit<T extends keyof E>(eventName:T, payload:E[T]) {
         // 省略
     }
 }
 // 使用例
-const ed = new EventDischarger();
-ed.emit("start", {
-    user: "user1"
-});
-ed.emit("stop", {
-    user: "user1",
-    after: 3
-});
-ed.emit("end", {});
-//  emit<Ev extends keyof E>(eventName: Ev, payload: E[Ev]) {
+//   const ed = new EventDischarger<EventPayloads>();
+//   ed.emit("start", {
+// 	user: "user1"
+//   });
+//   ed.emit("stop", {
+// 	user: "user1",
+// 	after: 3
+//   });
+//   ed.emit("end", {});
+//   // エラー例
+//   ed.emit("start", {
+// 	user: "user2",
+// 	after: 0
+//   });
+//   ed.emit("stop", {
+// 	user: "user2"
+//   });
+//   ed.emit("foobar", {
+// 	foo: 123
+//   });
+const reducer = (state, action) => {
+    switch (action.type) {
+        case "increment":
+            return state + action.amount;
+        case "decrement":
+            return state - action.amount;
+        case "reset":
+            return action.value;
+    }
+};
+// 使用例
+reducer(100, {
+    type: 'increment',
+    amount: 10,
+}) === 110;
+reducer(100, {
+    type: 'decrement',
+    amount: 55,
+}) === 45;
+reducer(500, {
+    type: 'reset',
+    value: 0,
+}) === 0;
 // エラー例
-ed.emit("start", {
-    user: "user2",
-    after: 0
-});
-ed.emit("stop", {
-    user: "user2"
-});
-ed.emit("foobar", {
-    foo: 123
+reducer(0, {
+    type: 'increment',
+    value: 100,
 });
 //# sourceMappingURL=practice.js.map

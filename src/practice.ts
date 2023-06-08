@@ -9,11 +9,10 @@ function isPositive(num:number):boolean {
 
 // 使用例
 isPositive(3);
-// // エラー例
+
+// エラー例
 // isPositive('123');
 // const numVar: number = isPositive(-5);
-
-
 
 //--------2
 
@@ -48,21 +47,19 @@ showUserInfo({
 
 //--------3
 
-type IsPositiveFunc = (number) => boolean
-const isPositive3: IsPositiveFunc = num => num >= 0;
+type IsPositiveFunc = (num:number) => boolean
+const isPositive2: IsPositiveFunc = num => num >= 0;
 
 // 使用例
-isPositive(5);
+isPositive2(5);
 
 // エラー例
-// isPositive3('foo');
-// const res: number = isPositive(123);
-
-
+// isPositive2('foo');
+// const res: number = isPositive2(123);
 
 //--------4
 
-function sumOfPos(arr:number[]) {
+function sumOfPos(arr:number[]):number {
 	return arr.filter(num => num >= 0).reduce((acc, num) => acc + num, 0);
 }
   
@@ -70,31 +67,36 @@ function sumOfPos(arr:number[]) {
 const sum: number = sumOfPos([1, 3, -2, 0]);
   
 // エラー例
-// sumOfPos(123, 456);
-// sumOfPos([123, "foobar"]);
+//   sumOfPos(123, 456);
+//   sumOfPos([123, "foobar"]);
 
 
 
 //--------2_1
-function myFilter<T>(arr: T[], predicate: (elm: T) => boolean): T[] {
-// function myFilter<T>(arr:T[], predicate:(elm:T) => boolean):T[] {
-	const result = [];
-	for (const elm of arr) {
-		if (predicate(elm)) {
-			// result.push(elm);
-		}
-	}
-	return result;
-}
 
+// interface MyFilterType {
+// 	// arr
 
+// }
+// function myFilter<T>(arr:T[], predicate:(elm:T) => boolean ):T[] {
+// // function myFilter<T>(arr: T[], predicate: (elm: T) => boolean): T[] {
+// 	const result = [];
+// 	for (const elm of arr) {
+// 	  if (predicate(elm)) {
+// 		result.push(elm);
+// 	  }
+// 	}
+// 	return result;
+//   }
   
-// 使用例
-const res = myFilter([1, 2, 3, 4, 5], num => num % 2 === 0);
-const res2 = myFilter(['foo', 'hoge', 'bar'], str => str.length >= 4);
+//   // 使用例
+//   const res = myFilter([1, 2, 3, 4, 5], num => num % 2 === 0);
+//   const res2 = myFilter(['foo', 'hoge', 'bar'], str => str.length >= 4);
+  
+//   // エラー例
+//   myFilter([1, 2, 3, 4, 5], str => str.length >= 4);
+  
 
-// エラー例
-// myFilter([1, 2, 3, 4, 5], str => str.length >= 4);
 
 
 //--------2_2
@@ -123,17 +125,13 @@ const fastSpeed = getSpeed("fast");
 
 //--------2_3
 
-declare function addEventListener(
-	text:string,
-	func:()=>void,
-	options?:boolean | {
-		capture?:boolean,
-		once?:boolean,
-		passive?:boolean
-	}
-):void
-	
 
+declare function addEventListener(
+	arg: 'string',
+	capture?:boolean,
+	once?:boolean,
+	passive?:boolean
+):void;
 
 // 使用例
 addEventListener("foobar", () => {});
@@ -144,7 +142,7 @@ addEventListener("event3", () => {}, {
   once: false
 });
 
-// // エラー例
+// エラー例
 // addEventListener("foobar", () => {}, "string");
 // addEventListener("hoge", () => {}, {
 //   capture: true,
@@ -155,14 +153,14 @@ addEventListener("event3", () => {}, {
 
 //--------2_4
 
-function giveId<T>(obj:T):{id:string} & T {
-// function giveId(T):{id:string,obj:{T extends obj}} {
+function giveId<T>(obj:T):T & {id:string} {
 	const id = "本当はランダムがいいけどここではただの文字列";
 	return {
 	  ...obj,
 	  id
 	};
   }
+  
   
   // 使用例
   const obj1: {
@@ -226,7 +224,7 @@ setAnotherState(100);
 ///課題、返り値を見てみてよ
 // function mapFromArray<T,K extends keyof T>(arr:T[],key:K) {
 
-function mapFromArray(arr, key) {
+function mapFromArray<T,K extends keyof T>(arr:T[], key:K) {
 	const result = new Map();
 	for (const obj of arr) {
 	  result.set(obj[key], obj);
@@ -261,28 +259,25 @@ Map {
 // PartialはTypeScriptの標準ライブラリに定義されている型で、
 // オブジェクトの型を渡されると、その各プロパティを全部省略可能にするものです。
 // MyPartialという名前でこれを実装してください。
-
 // 使用例
 /*
  * T1は { foo?: number; bar?: string; } となる
  */
 
-//これ　が回答。mapped type。
-// type MyPartial<T> = { [K in keyof T]: T[K] };
+type MyPartial<T> = { [K in keyof T]?: T[K] };
 
-// type T1 = MyPartial<{
-// 	foo?: number;
-// 	bar?: string;
-// }>;
-// /*
-// * T2は { hoge?: { piyo: number; } } となる
-// */
-// type T2 = MyPartial<{
-// 	hoge: {
-// 		piyo: number;
-// 	};
-// }>;
-
+type T1 = MyPartial<{
+	foo: number;
+	bar: string;
+}>;
+/*
+* T2は { hoge?: { piyo: number; } } となる
+*/
+type T2 = MyPartial<{
+	hoge: {
+	  piyo: number;
+	};
+}>;
 
 
 //--------3_2
@@ -305,37 +300,69 @@ interface EventPayloads {
 	  after: number;
 	};
 	end: {};
-}
+  }
   
-class EventDischarger<E> {
-	//下の方に回答！
-	
-	emit(eventName, payload) {
-		// 省略
+  class EventDischarger<E> {
+	emit<Ev extends keyof E>(eventName: Ev, payload: E[Ev]) {
+	// emit<T extends keyof E>(eventName:T, payload:E[T]) {
+	  // 省略
 	}
-}
-
-// 使用例
-const ed = new EventDischarger<EventPayloads>();
-ed.emit("start", {
-	user: "user1"
-});
-ed.emit("stop", {
-	user: "user1",
-	after: 3
-});
-ed.emit("end", {});
-//  emit<Ev extends keyof E>(eventName: Ev, payload: E[Ev]) {
-
-  // エラー例
-  ed.emit("start", {
-	user: "user2",
-	after: 0
-  });
-  ed.emit("stop", {
-	user: "user2"
-  });
-  ed.emit("foobar", {
-	foo: 123
-  });
+  }
   
+  // 使用例
+//   const ed = new EventDischarger<EventPayloads>();
+//   ed.emit("start", {
+// 	user: "user1"
+//   });
+//   ed.emit("stop", {
+// 	user: "user1",
+// 	after: 3
+//   });
+//   ed.emit("end", {});
+  
+//   // エラー例
+//   ed.emit("start", {
+// 	user: "user2",
+// 	after: 0
+//   });
+//   ed.emit("stop", {
+// 	user: "user2"
+//   });
+//   ed.emit("foobar", {
+// 	foo: 123
+//   });
+
+
+
+
+
+  const reducer = (state, action) => {
+	switch (action.type) {
+	  case "increment":
+		return state + action.amount;
+	  case "decrement":
+		return state - action.amount;
+	  case "reset":
+		return action.value;
+	}
+  };
+  
+  // 使用例
+  reducer(100, {
+	  type: 'increment',
+	  amount: 10,
+  }) === 110;
+  reducer(100, {
+	  type: 'decrement',
+	  amount: 55,
+  }) === 45;
+  reducer(500, {
+	  type: 'reset',
+	  value: 0,
+  }) === 0;
+  
+  // エラー例
+  reducer(0,{
+	  type: 'increment',
+	  value: 100,
+  });
