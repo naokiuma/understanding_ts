@@ -2,84 +2,27 @@
 // この問題を解いていく
 
 
-//--------1
-function isPositive(num:number):boolean {
-    return num >= 0;
-}
-
-// 使用例
-isPositive(3);
-
-// エラー例
-// isPositive('123');
-// const numVar: number = isPositive(-5);
-
-//--------2
-
-type User = {
-	name: string,
-    age: number,
-    private: boolean,
-
-}
-function showUserInfo(user: User) {
-    // 省略
-}
-
-// 使用例
-showUserInfo({
-    name: 'John Smith',
-    age: 16,
-    private: false,
-});
-
-// エラー例
-// showUserInfo({
-//     name: 'Mary Sue',
-//     private: false,
-// });
-// const usr: User = {
-//     name: 'Gombe Nanashino',
-//     age: 100,
-// };
-
-
-
-//--------3
-
-type IsPositiveFunc = (num:number) => boolean
-const isPositive2: IsPositiveFunc = num => num >= 0;
-
-// 使用例
-isPositive2(5);
-
-// エラー例
-// isPositive2('foo');
-// const res: number = isPositive2(123);
-
 //--------4
 
+// 1-4 無理してtypeにしなくても良い！
+
+// type sumof = (arg:number[]) => number
 function sumOfPos(arr:number[]):number {
 	return arr.filter(num => num >= 0).reduce((acc, num) => acc + num, 0);
-}
+  }
   
-// 使用例
-const sum: number = sumOfPos([1, 3, -2, 0]);
+  // 使用例
+  const sum: number = sumOfPos([1, 3, -2, 0]);
   
-// エラー例
+  // エラー例
 //   sumOfPos(123, 456);
 //   sumOfPos([123, "foobar"]);
 
+//--------2_1 なぜかelmが消えない
 
-
-//--------2_1
-
-// interface MyFilterType {
-// 	// arr
-
-// }
-// function myFilter<T>(arr:T[], predicate:(elm:T) => boolean ):T[] {
-// // function myFilter<T>(arr: T[], predicate: (elm: T) => boolean): T[] {
+// 
+// type funcType = 
+// function myFilter<T>(arr:Array<T>, predicate:(elm:T) => boolean):T[] {
 // 	const result = [];
 // 	for (const elm of arr) {
 // 	  if (predicate(elm)) {
@@ -88,15 +31,15 @@ const sum: number = sumOfPos([1, 3, -2, 0]);
 // 	}
 // 	return result;
 //   }
+
+
   
 //   // 使用例
 //   const res = myFilter([1, 2, 3, 4, 5], num => num % 2 === 0);
 //   const res2 = myFilter(['foo', 'hoge', 'bar'], str => str.length >= 4);
   
-//   // エラー例
+  // エラー例
 //   myFilter([1, 2, 3, 4, 5], str => str.length >= 4);
-  
-
 
 
 //--------2_2
@@ -125,13 +68,13 @@ const fastSpeed = getSpeed("fast");
 
 //--------2_3
 
-
+//--------関数の定義の時に実演はできない。
 declare function addEventListener(
-	arg: 'string',
-	capture?:boolean,
-	once?:boolean,
-	passive?:boolean
-):void;
+	arg:string,
+	func:() => boolean,
+	option?:boolean | {capture?:boolean,once?:boolean,excess?:boolean}
+	):void
+	
 
 // 使用例
 addEventListener("foobar", () => {});
@@ -153,6 +96,8 @@ addEventListener("event3", () => {}, {
 
 //--------2_4
 
+//気づけば超簡単！ヒント：インターセクション
+
 function giveId<T>(obj:T):T & {id:string} {
 	const id = "本当はランダムがいいけどここではただの文字列";
 	return {
@@ -161,13 +106,12 @@ function giveId<T>(obj:T):T & {id:string} {
 	};
   }
   
-  
   // 使用例
   const obj1: {
 	id: string;
 	foo: number;
   } = giveId({ foo: 123 });
-  
+
   const obj2: {
 	id: string;
 	num: number;
@@ -176,39 +120,38 @@ function giveId<T>(obj:T):T & {id:string} {
 	num: 0,
 	hoge: true
   });
+
   
-  // エラー例
-//   const obj3: {
-// 	id: string;
-// 	piyo: string;
-//   } = giveId({
-// 	foo: "bar"
-//   });
+
 
 
 //--------2_5
 
+//--------------うううむっず！！！でも理解はできた
 //自分の回答
-declare function useState2<T>(first:T):[T,(T)=> T]
+// declare function useState2<T,func>(arr:T):[T,func = (T)]
 
-//正しい回答例
-type UseStateUpdateArgument<T> = T | ((oldValue: T) => T);
-declare function useState<T>(
-  initialValue: T
-): [T, (updator: UseStateUpdateArgument<T>) => void];
+type useStaetUpdate<T> = T | ((oldval:T) => T); 
+
+declare function useState2<T>(
+	initialVal:T
+	):[T,(updattor:useStaetUpdate<T>) => void]
 
 
 // 使用例
 // number型のステートを宣言 (numStateはnumber型)
-const [numState, setNumState] = useState(0);
+const [numState, setNumState] = useState2(0);
 // setNumStateは新しい値で呼び出せる
 setNumState(3);
 // setNumStateは古いステートを新しいステートに変換する関数を渡すこともできる
 setNumState(state => state + 10);
 
 // 型引数を明示することも可能
-const [anotherState, setAnotherState] = useState<number | null>(null);
+const [anotherState, setAnotherState] = useState2<number | null>(null);
 setAnotherState(100);
+
+// エラー例
+// setNumState('foobar');
 
 // エラー例
 // setNumState('foobar');
@@ -217,37 +160,35 @@ setAnotherState(100);
 
 //--------3_1
 
-// type mapFromArrayType = {
-// 	arr:object[]
-// 	key:string
-// }
-///課題、返り値を見てみてよ
-// function mapFromArray<T,K extends keyof T>(arr:T[],key:K) {
+// keyof と、extends keyofの違いは？
+// function mapFromArray<T,K extends keyof T>(arr:T[], key:K) {
 
-function mapFromArray<T,K extends keyof T>(arr:T[], key:K) {
+
+// function mapFromArray<T,U extends keyof T>(arr:T[], key:U) {
+function mapFromArray<T,U extends keyof T>(arr:T[], key:U){
 	const result = new Map();
 	for (const obj of arr) {
-	  result.set(obj[key], obj);
+		result.set(obj[key], obj);
 	}
 	return result;
-}
-  
-// 使用例
-const data2 = [
+	}
+
+  // 使用例
+  const data111 = [
 	{ id: 1, name: "John Smith" },
 	{ id: 2, name: "Mary Sue" },
 	{ id: 100, name: "Taro Yamada" }
-];
-const dataMap = mapFromArray(data2, "id");
-/*
-dataMapは
-Map {
+  ];
+  const dataMap = mapFromArray(data111, "id");
+  /*
+  dataMapは
+  Map {
 	1 => { id: 1, name: 'John Smith' },
 	2 => { id: 2, name: 'Mary Sue' },
 	100 => { id: 100, name: 'Taro Yamada' }
-}
-というMapになる
-*/
+  }
+  というMapになる
+  */
   
 // エラー例
 // mapFromArray(data2, "age");
@@ -264,7 +205,16 @@ Map {
  * T1は { foo?: number; bar?: string; } となる
  */
 
-type MyPartial<T> = { [K in keyof T]?: T[K] };
+// type MyPartial<T> = { [K in keyof T]?: T[K] };
+
+
+
+
+type MyPartial<T> = {
+	[K in keyof T]? :T[K]
+}
+
+
 
 type T1 = MyPartial<{
 	foo: number;
@@ -334,9 +284,23 @@ interface EventPayloads {
 
 
 
+type Action = 
+	{
+		type:'increment';
+		amount:number
+	}|
+	{
+		type:'decrement';
+		amount:number
+	}|
+	{
+		type:'reset';
+		value:number
+	}
+	
 
 
-  const reducer = (state, action) => {
+  const reducer = (state:number, action:Action) => {
 	switch (action.type) {
 	  case "increment":
 		return state + action.amount;
@@ -362,7 +326,7 @@ interface EventPayloads {
   }) === 0;
   
   // エラー例
-  reducer(0,{
-	  type: 'increment',
-	  value: 100,
-  });
+//   reducer(0,{
+// 	  type: 'increment',
+// 	  value: 100,
+//   });

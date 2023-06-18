@@ -1,27 +1,8 @@
 //https://qiita.com/uhyo/items/e4f54ef3b87afdd65546
 // この問題を解いていく
-//--------1
-function isPositive(num) {
-    return num >= 0;
-}
-// 使用例
-isPositive(3);
-function showUserInfo(user) {
-    // 省略
-}
-// 使用例
-showUserInfo({
-    name: 'John Smith',
-    age: 16,
-    private: false,
-});
-const isPositive2 = num => num >= 0;
-// 使用例
-isPositive2(5);
-// エラー例
-// isPositive2('foo');
-// const res: number = isPositive2(123);
 //--------4
+// 1-4 無理してtypeにしなくても良い！
+// type sumof = (arg:number[]) => number
 function sumOfPos(arr) {
     return arr.filter(num => num >= 0).reduce((acc, num) => acc + num, 0);
 }
@@ -57,6 +38,7 @@ addEventListener("event3", () => { }, {
 //   excess: true
 // });
 //--------2_4
+//気づけば超簡単！ヒント：インターセクション
 function giveId(obj) {
     const id = "本当はランダムがいいけどここではただの文字列";
     return Object.assign(Object.assign({}, obj), { id });
@@ -69,23 +51,22 @@ const obj2 = giveId({
 });
 // 使用例
 // number型のステートを宣言 (numStateはnumber型)
-const [numState, setNumState] = useState(0);
+const [numState, setNumState] = useState2(0);
 // setNumStateは新しい値で呼び出せる
 setNumState(3);
 // setNumStateは古いステートを新しいステートに変換する関数を渡すこともできる
 setNumState(state => state + 10);
 // 型引数を明示することも可能
-const [anotherState, setAnotherState] = useState(null);
+const [anotherState, setAnotherState] = useState2(null);
 setAnotherState(100);
 // エラー例
 // setNumState('foobar');
+// エラー例
+// setNumState('foobar');
 //--------3_1
-// type mapFromArrayType = {
-// 	arr:object[]
-// 	key:string
-// }
-///課題、返り値を見てみてよ
-// function mapFromArray<T,K extends keyof T>(arr:T[],key:K) {
+// keyof と、extends keyofの違いは？
+// function mapFromArray<T,K extends keyof T>(arr:T[], key:K) {
+// function mapFromArray<T,U extends keyof T>(arr:T[], key:U) {
 function mapFromArray(arr, key) {
     const result = new Map();
     for (const obj of arr) {
@@ -94,39 +75,18 @@ function mapFromArray(arr, key) {
     return result;
 }
 // 使用例
-const data2 = [
+const data111 = [
     { id: 1, name: "John Smith" },
     { id: 2, name: "Mary Sue" },
     { id: 100, name: "Taro Yamada" }
 ];
-const dataMap = mapFromArray(data2, "id");
+const dataMap = mapFromArray(data111, "id");
 class EventDischarger {
     emit(eventName, payload) {
         // emit<T extends keyof E>(eventName:T, payload:E[T]) {
         // 省略
     }
 }
-// 使用例
-//   const ed = new EventDischarger<EventPayloads>();
-//   ed.emit("start", {
-// 	user: "user1"
-//   });
-//   ed.emit("stop", {
-// 	user: "user1",
-// 	after: 3
-//   });
-//   ed.emit("end", {});
-//   // エラー例
-//   ed.emit("start", {
-// 	user: "user2",
-// 	after: 0
-//   });
-//   ed.emit("stop", {
-// 	user: "user2"
-//   });
-//   ed.emit("foobar", {
-// 	foo: 123
-//   });
 const reducer = (state, action) => {
     switch (action.type) {
         case "increment":
@@ -151,8 +111,8 @@ reducer(500, {
     value: 0,
 }) === 0;
 // エラー例
-reducer(0, {
-    type: 'increment',
-    value: 100,
-});
+//   reducer(0,{
+// 	  type: 'increment',
+// 	  value: 100,
+//   });
 //# sourceMappingURL=practice.js.map

@@ -42,16 +42,6 @@ class ProjectState extends State {
     addProject(title, description, manday) {
         const newProject = new Project(Math.random().toString(), title, description, manday, ProjectStatus.Active);
         this.projects.push(newProject);
-        this.updateListeners();
-    }
-    moveProject(projectId, newStatus) {
-        const project = this.projects.find(prj => prj.id === projectId);
-        if (project && project.status !== newStatus) {
-            project.status = newStatus;
-            this.updateListeners();
-        }
-    }
-    updateListeners() {
         for (const listenerFn of this.listeners) {
             listenerFn(this.projects.slice());
         }
@@ -111,42 +101,6 @@ class Component {
         this.hostElement.insertAdjacentElement(insertAtBeginning ? 'afterbegin' : 'beforeend', this.element);
     }
 }
-// ProjectItem Class
-class ProjectItem extends Component {
-    constructor(hostId, project) {
-        super('single-project', hostId, false, project.id);
-        this.project = project;
-        this.configure();
-        this.renderContent();
-    }
-    get manday() {
-        if (this.project.manday < 20) {
-            return this.project.manday.toString() + '人日';
-        }
-        else {
-            return (this.project.manday / 20).toString() + '人月';
-        }
-    }
-    dragStartHandler(event) {
-        event.dataTransfer.setData('text/plain', this.project.id);
-        event.dataTransfer.effectAllowed = 'move';
-    }
-    dragEndHandler(_) {
-        console.log('Drag終了');
-    }
-    configure() {
-        this.element.addEventListener('dragstart', this.dragStartHandler);
-        this.element.addEventListener('dragend', this.dragEndHandler);
-    }
-    renderContent() {
-        this.element.querySelector('h2').textContent = this.project.title;
-        this.element.querySelector('h3').textContent = this.manday;
-        this.element.querySelector('p').textContent = this.project.description;
-    }
-}
-__decorate([
-    autobind
-], ProjectItem.prototype, "dragStartHandler", null);
 // ProjectList Class
 class ProjectList extends Component {
     constructor(type) {
@@ -156,25 +110,7 @@ class ProjectList extends Component {
         this.configure();
         this.renderContent();
     }
-    dragOverHandler(event) {
-        if (event.dataTransfer && event.dataTransfer.types[0] === 'text/plain') {
-            event.preventDefault();
-            const listEl = this.element.querySelector('ul');
-            listEl.classList.add('droppable');
-        }
-    }
-    dropHandler(event) {
-        const prjId = event.dataTransfer.getData('text/plain');
-        projectState.moveProject(prjId, this.type === 'active' ? ProjectStatus.Active : ProjectStatus.Finished);
-    }
-    dragLeaveHandler(_) {
-        const listEl = this.element.querySelector('ul');
-        listEl.classList.remove('droppable');
-    }
     configure() {
-        this.element.addEventListener('dragover', this.dragOverHandler);
-        this.element.addEventListener('drop', this.dropHandler);
-        this.element.addEventListener('dragleave', this.dragLeaveHandler);
         projectState.addListener((projects) => {
             const relevantProjects = projects.filter(prj => {
                 if (this.type === 'active') {
@@ -196,19 +132,12 @@ class ProjectList extends Component {
         const listEl = document.getElementById(`${this.type}-projects-list`);
         listEl.innerHTML = '';
         for (const prjItem of this.assignedProjects) {
-            new ProjectItem(listEl.id, prjItem);
+            const listItem = document.createElement('li');
+            listItem.textContent = prjItem.title;
+            listEl.appendChild(listItem);
         }
     }
 }
-__decorate([
-    autobind
-], ProjectList.prototype, "dragOverHandler", null);
-__decorate([
-    autobind
-], ProjectList.prototype, "dropHandler", null);
-__decorate([
-    autobind
-], ProjectList.prototype, "dragLeaveHandler", null);
 // ProjectInput Class
 class ProjectInput extends Component {
     constructor() {
@@ -272,4 +201,4 @@ __decorate([
 const prjInput = new ProjectInput();
 const activePrjList = new ProjectList('active');
 const finishedPrjList = new ProjectList('finished');
-//# sourceMappingURL=todo.js.map
+//# sourceMappingURL=app_sam.js.map
