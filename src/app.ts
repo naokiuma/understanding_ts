@@ -1,69 +1,22 @@
-// type reduceType =
-// 	{
-// 		type:'increment',
-// 		amount:number
-// 	}|
-// 	{
-// 		type:'decrement',
-// 		amount:number
-// 	}|
-// 	{
-// 		type:'reset',
-// 		value:number
-// 	}
-		
 
 
 
-// const reducer2 = (state:number, action:reduceType) => {
-// 	switch (action.type) {
-// 	  case "increment":
-// 		return state + action.amount;
-// 	  case "decrement":
-// 		return state - action.amount;
-// 	  case "reset":
-// 		return action.value;
-// 	}
-//   };
-  
-//   // 使用例
-//   reducer(100, {
-// 	  type: 'increment',
-// 	  amount: 10,
-//   }) === 110;
-//   reducer(100, {
-// 	  type: 'decrement',
-// 	  amount: 55,
-//   }) === 45;
-//   reducer(500, {
-// 	  type: 'reset',
-// 	  value: 0,
-//   }) === 0;
-  
-//   // エラー例
-// //   reducer(0,{
-// // 	  type: 'increment',
-// // 	  value: 100,
-// //   });
+type UseStateUpdateArgument<T> = T | ((oldValue: T) => T);
+declare function useState<T>(
+  initialValue: T
+): [T, (updator: UseStateUpdateArgument<T>) => void];
 
+// 使用例
+// number型のステートを宣言 (numStateはnumber型)
+const [numState2, setNumState2] = useState(0);
+// setNumStateは新しい値で呼び出せる
+setNumState(3);
+// setNumStateは古いステートを新しいステートに変換する関数を渡すこともできる
+setNumState(state => state + 10);
 
+// 型引数を明示することも可能
+const [anotherState3, setAnotherState4] = useState<number | null>(null);
+setAnotherState(100);
 
-
-
-
-// type Func<A, R> = (arg: A) => R;
-
-// // 使用例
-// const f1: Func<number, number> = num => num + 10;
-// const v1: number = f1(10);
-
-// const f2: Func<undefined, number> = () => 0;
-// const v2: number = f2();
-// const v3: number = f2(undefined);
-
-// const f3: Func<number | undefined, number> = num => (num || 0) + 10;
-// const v4: number = f3(123);
-// const v5: number = f3();
-
-// // エラー例
-// // const v6: number = f1();
+// エラー例
+// setNumState('foobar');
