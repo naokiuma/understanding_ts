@@ -2,6 +2,7 @@
 
 
 type UseStateUpdateArgument<T> = T | ((oldValue: T) => T);
+
 declare function useState<T>(
   initialValue: T
 ): [T, (updator: UseStateUpdateArgument<T>) => void];

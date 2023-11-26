@@ -20,11 +20,12 @@ console.log(merge({name:'max'},{age:20}));
 function merge2<T,U>(objA:T,objB:U){
 	return Object.assign(objA,objB)
 }
-
 const medgedObject2 = merge2({name:'max'},{age:20});
 console.log(medgedObject2.age)
 
-//こういう風にもかけるけど、medgedObject2のように、引数を入れた時に型推論してくれているので、わざわざ定義しなくても良い。
+
+//ジェネリックを使わなくても、こういう風にもかけるけど、
+//ジェネリックならmedgedObject2のように、引数を入れた時に型推論してくれているので、わざわざ定義しなくても良い。
 const mergedObject3 = merge2<string,number>('name',2)
 console.log(mergedObject3)
 
@@ -54,7 +55,7 @@ console.log(countAndDescribe('こんにちは！'))
 
 
 // keyofで制約をつける。-------------
-//こういう時に、objにはkeyのプロパティがあることを保証したい！
+//こういう↓時に、objにはkeyのプロパティがあることを保証したい！
 // function extractAndConvert(obj,key){
 // 	return 'value：' + obj[key];
 // }
@@ -70,10 +71,10 @@ const names:Readonly<string[]> = ['max','annna'];
 // names.push('kevin');・・ここでtsがエラーを出している
 
 
+
 //関数の引数におけるジェネリック VS ユニオン型
 // ジェネリックは、型を一度決めたらその利用箇所の中では同じものを使いたい場合におすすめ。
 // ユニオン型は、例えばnumberとstringと。。。と、複数の引数を受け取りたい場合。
-
 
 const user = {
 	name: 'John',

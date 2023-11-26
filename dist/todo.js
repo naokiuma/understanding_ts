@@ -113,12 +113,6 @@ class Component {
 }
 // ProjectItem Class
 class ProjectItem extends Component {
-    constructor(hostId, project) {
-        super('single-project', hostId, false, project.id);
-        this.project = project;
-        this.configure();
-        this.renderContent();
-    }
     get manday() {
         if (this.project.manday < 20) {
             return this.project.manday.toString() + '人日';
@@ -126,6 +120,12 @@ class ProjectItem extends Component {
         else {
             return (this.project.manday / 20).toString() + '人月';
         }
+    }
+    constructor(hostId, project) {
+        super('single-project', hostId, false, project.id);
+        this.project = project;
+        this.configure();
+        this.renderContent();
     }
     dragStartHandler(event) {
         event.dataTransfer.setData('text/plain', this.project.id);
