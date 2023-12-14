@@ -16,7 +16,8 @@ function merge2(objA, objB) {
 }
 const medgedObject2 = merge2({ name: 'max' }, { age: 20 });
 console.log(medgedObject2.age);
-//こういう風にもかけるけど、medgedObject2のように、引数を入れた時に型推論してくれているので、わざわざ定義しなくても良い。
+//ジェネリックを使わなくても、こういう風にもかけるけど、
+//ジェネリックならmedgedObject2のように、引数を入れた時に型推論してくれているので、わざわざ定義しなくても良い。
 const mergedObject3 = merge2('name', 2);
 console.log(mergedObject3);
 //ジェネリックの制約。このようにextendsをつけると、最低限objectじゃ無いといけないよ！という制約をつけることができる。
@@ -34,7 +35,7 @@ function countAndDescribe(element) {
 }
 console.log(countAndDescribe('こんにちは！'));
 // keyofで制約をつける。-------------
-//こういう時に、objにはkeyのプロパティがあることを保証したい！
+//こういう↓時に、objにはkeyのプロパティがあることを保証したい！
 // function extractAndConvert(obj,key){
 // 	return 'value：' + obj[key];
 // }
