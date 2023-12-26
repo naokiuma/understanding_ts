@@ -1,3 +1,4 @@
+//keyof型。
 type Person_keyof = {
 	name:string;
 	price:number

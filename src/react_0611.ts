@@ -26,7 +26,7 @@ const example = (foo: unknown) => {
 };
 
 
-
+//as constすると、read onlyになる。
 const colors = ["red", "green", "blue"] as const;
 type Color = typeof colors[number]; // = "red" | "green" | "blue"
 
