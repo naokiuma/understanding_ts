@@ -1,4 +1,5 @@
-// インデックス型
+// インデックス型(index signature)
+// こんな感じで書くことで、stringのkey、numberのプロパティのオブジェクトを作ることができる。
 let obj:{
 	[K:string]:number
 }
